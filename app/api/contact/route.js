@@ -45,6 +45,8 @@ export async function POST(request) {
     return Response.json(
       {
         error: "Erreur lors de l'enregistrement du message",
+        details: err.message,
+        code: err.code
       },
       { status: 500 }
     );
@@ -83,6 +85,8 @@ export async function GET() {
     return Response.json(
       {
         error: "Erreur récupération messages",
+        details: err.message,
+        code: err.code
       },
       { status: 500 }
     );
