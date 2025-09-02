@@ -1,6 +1,6 @@
 # Deftar Backend API - Next.js
 
-This is a Next.js API backend for the Deftar application, converted from Express.js for deployment on Vercel.
+This is a Next.js API backend for the Deftar application, built for deployment on Vercel.
 
 ## Features
 
@@ -153,12 +153,12 @@ The API is configured to allow requests from any origin (`*`) for development. I
 - All API responses are in JSON format
 - Error handling includes appropriate HTTP status codes
 
-## Migration from Express.js
+## Architecture
 
-This Next.js version maintains the same API structure as the original Express.js application, with the following changes:
+This Next.js application is built with the following architecture:
 
-- Routes are now API routes in the `app/api/` directory
-- File uploads use FormData instead of Multer
+- API routes are located in the `app/api/` directory
+- File uploads use FormData for handling multipart data
 - Database queries use PostgreSQL syntax
 - CORS is handled via middleware
 - Static file serving is handled via API routes
