@@ -1,15 +1,79 @@
-# Deftre Backend
+# Deftar Backend API - Next.js
 
-A Node.js backend application using Express and PostgreSQL.
+This is a Next.js API backend for the Deftar application, converted from Express.js for deployment on Vercel.
 
-## Setup
+## Features
 
-### Prerequisites
+- 🔐 User authentication and management
+- 📞 Contact form handling
+- 📦 Order management with file uploads
+- 📧 Email sending functionality
+- 📊 Dashboard statistics
+- 🏦 Bank management
+- 🖼️ Model image management
+- 📁 File upload and serving
 
-- Node.js (v14 or higher)
-- PostgreSQL database
+## API Endpoints
 
-### Installation
+### Authentication
+
+- `POST /api/login` - User login
+- `POST /api/add-account` - Add new user account
+- `POST /api/update-account` - Update user account
+
+### Contact
+
+- `GET /api/contact` - Get all contact messages
+- `POST /api/contact` - Create new contact message
+- `PUT /api/contact/[id]/reply` - Reply to contact message
+
+### Orders
+
+- `GET /api/orders` - Get all orders
+- `POST /api/orders` - Create new order (with file uploads)
+
+### Email
+
+- `POST /api/send-mail` - Send email with attachments
+
+### Dashboard
+
+- `GET /api/dash/status` - Get order status statistics
+- `GET /api/dash/matiere` - Get subject statistics
+
+### Banks
+
+- `GET /api/banks` - Get all banks
+- `POST /api/banks` - Add new bank
+- `PUT /api/banks/[id]` - Update bank
+- `DELETE /api/banks/[id]` - Delete bank
+
+### Models
+
+- `GET /api/models` - Get all model images
+- `POST /api/models` - Add new model image
+- `DELETE /api/models/[id]` - Delete model image
+
+### Files
+
+- `GET /api/uploads/[...path]` - Serve uploaded files
+
+### System
+
+- `GET /api/health` - Health check
+- `POST /api/init` - Initialize database
+
+## Environment Variables
+
+Create a `.env.local` file with the following variables:
+
+```env
+DATABASE_URL=your_postgresql_connection_string
+EMAIL_USER=your_gmail_address
+EMAIL_PASS=your_gmail_app_password
+```
+
+## Local Development
 
 1. Install dependencies:
 
@@ -17,74 +81,84 @@ A Node.js backend application using Express and PostgreSQL.
 npm install
 ```
 
-2. Create a `.env` file in the root directory with the following variables:
+2. Set up environment variables in `.env.local`
 
-```env
-# Database Configuration
-DATABASE_URL=postgresql://username:password@localhost:5432/deftre
-
-# Server Configuration
-PORT=5000
-HOST=172.17.139.87
-
-# Environment
-NODE_ENV=development
-```
-
-3. Set up your PostgreSQL database:
-
-   - Create a database named `deftre`
-   - Import the PostgreSQL schema from `deftre_postgresql.sql`
-   - Or use the original `deftre.sql` and convert MySQL syntax to PostgreSQL manually
-
-4. Start the server:
+3. Run the development server:
 
 ```bash
-npm start
+npm run dev
 ```
 
-## Database Migration from MySQL to PostgreSQL
+4. Initialize the database (optional):
 
-This project has been migrated from MySQL to PostgreSQL. Key changes:
-
-- Replaced `mysql2` with `pg` (PostgreSQL client)
-- Updated query syntax from `?` placeholders to `$1, $2, ...` placeholders
-- Changed from callback-based queries to async/await with connection pooling
-- Added SSL configuration for production environments
-
-## Environment Variables
-
-Create a `.env` file in the root directory with the following variables:
-
-```env
-# Database Configuration
-DATABASE_URL=postgresql://username:password@localhost:5432/deftre
-
-# Server Configuration
-PORT=5000
-HOST=172.17.139.87
-
-# Environment
-NODE_ENV=development
-
-# Email Configuration (for nodemailer)
-EMAIL_USER=your_email@gmail.com
-EMAIL_PASS=your_email_password
-
-# Other optional variables
-# STRIPE_SECRET_KEY=your_stripe_secret_key
+```bash
+curl -X POST http://localhost:3000/api/init
 ```
 
-### DATABASE_URL Format
+## Deployment to Vercel
 
-The `DATABASE_URL` should follow this format:
+1. Install Vercel CLI:
 
-- Local: `postgresql://username:password@localhost:5432/deftre`
-- Remote: `postgresql://username:password@host:port/database`
-- With SSL: `postgresql://username:password@host:port/database?sslmode=require`
+```bash
+npm i -g vercel
+```
 
-## API Endpoints
+2. Deploy to Vercel:
 
-- `/api/health` - Health check
-- `/api/*` - Various API routes
-- `/banks/*` - Bank-related routes
+```bash
+vercel
+```
+
+3. Set environment variables in Vercel dashboard:
+
+   - Go to your project settings
+   - Add the environment variables (DATABASE_URL, EMAIL_USER, EMAIL_PASS)
+
+4. Initialize the database after deployment:
+
+```bash
+curl -X POST https://your-vercel-app.vercel.app/api/init
+```
+
+## File Uploads
+
+The application handles file uploads for:
+
+- Order receipts (PDF)
+- Schedule images (JPG, PNG, WebP)
+- Bank logos (JPG, PNG)
+- Model images (JPG, PNG, WebP)
+
+Files are stored in the `uploads/` directory and served via the `/api/uploads/[...path]` endpoint.
+
+## Database Schema
+
+The application expects the following PostgreSQL tables:
+
+- `users` - User accounts
+- `contact` - Contact messages
+- `commandes` - Orders
+- `banks` - Bank information
+- `models_images` - Model images
+
+## CORS Configuration
+
+The API is configured to allow requests from any origin (`*`) for development. In production, you should configure specific origins in the middleware.
+
+## Notes
+
+- The application uses PostgreSQL as the database
+- File uploads are handled using FormData
+- Email functionality uses Nodemailer with Gmail SMTP
+- All API responses are in JSON format
+- Error handling includes appropriate HTTP status codes
+
+## Migration from Express.js
+
+This Next.js version maintains the same API structure as the original Express.js application, with the following changes:
+
+- Routes are now API routes in the `app/api/` directory
+- File uploads use FormData instead of Multer
+- Database queries use PostgreSQL syntax
+- CORS is handled via middleware
+- Static file serving is handled via API routes
