@@ -2,20 +2,20 @@
 import nodemailer from "nodemailer";
 import db from "../../lib/db.js";
 
-// === Config Nodemailer ===
-const transporter = nodemailer.createTransporter({
-  host: "smtp.gmail.com",
-  port: 465,
-  secure: true,
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
-  },
-});
-
 // === Fonction utilitaire pour envoyer email ===
 const sendMail = async ({ to, subject, text, file }) => {
   try {
+    // Create transporter inside the function to avoid build issues
+    const transporter = nodemailer.createTransporter({
+      host: "smtp.gmail.com",
+      port: 465,
+      secure: true,
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
+      },
+    });
+
     const mailOptions = {
       from: `"Plateforme Taalim Work" <${process.env.EMAIL_USER}>`,
       to,
